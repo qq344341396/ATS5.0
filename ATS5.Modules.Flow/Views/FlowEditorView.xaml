@@ -1,0 +1,524 @@
+<UserControl x:Class="ATS5.Modules.Flow.Views.FlowEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:hc="https://handyorg.github.io/handycontrol"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             FontFamily="Microsoft YaHei UI"
+             Background="#F3F5F7">
+    <UserControl.Resources>
+        <SolidColorBrush x:Key="AtsBlueBrush" Color="#106EBE"/>
+        <SolidColorBrush x:Key="AtsBorderBrush" Color="#C9D2DC"/>
+        <SolidColorBrush x:Key="AtsLightBorderBrush" Color="#DDE4EB"/>
+        <SolidColorBrush x:Key="AtsToolbarBrush" Color="#ECEFF2"/>
+        <SolidColorBrush x:Key="AtsPanelBrush" Color="#F8FAFC"/>
+
+        <Style x:Key="FlatToolButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="26"/>
+            <Setter Property="MinWidth" Value="48"/>
+            <Setter Property="Padding" Value="8,0"/>
+            <Setter Property="Margin" Value="1,0"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="#1F2A35"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="3">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#DCEAF7"/>
+                                <Setter Property="BorderBrush" Value="#AAC9E6"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter Property="Background" Value="#C9DFF3"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="IconButtonStyle" TargetType="Button">
+            <Setter Property="Width" Value="24"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0,2"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#7A8794"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="1"
+                                CornerRadius="2">
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#E6EDF5"/>
+                                <Setter Property="BorderBrush" Value="#B9C9DA"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.45"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="CompactTabControlStyle" TargetType="TabControl">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="{StaticResource AtsBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="0"/>
+        </Style>
+
+        <Style x:Key="CompactTabItemStyle" TargetType="TabItem">
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="MinWidth" Value="74"/>
+            <Setter Property="Padding" Value="12,0"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border x:Name="TabBorder"
+                                Background="#E8ECF1"
+                                BorderBrush="{StaticResource AtsBorderBrush}"
+                                BorderThickness="0,0,1,1">
+                            <ContentPresenter ContentSource="Header"
+                                              HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="TabBorder" Property="Background" Value="White"/>
+                                <Setter TargetName="TabBorder" Property="BorderThickness" Value="0,0,1,0"/>
+                                <Setter Property="Foreground" Value="#106EBE"/>
+                                <Setter Property="FontWeight" Value="SemiBold"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BottomTabItemStyle" TargetType="TabItem" BasedOn="{StaticResource CompactTabItemStyle}">
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="MinWidth" Value="104"/>
+            <Setter Property="Padding" Value="10,0"/>
+        </Style>
+
+        <Style x:Key="GridStyle" TargetType="DataGrid">
+            <Setter Property="AutoGenerateColumns" Value="False"/>
+            <Setter Property="CanUserAddRows" Value="False"/>
+            <Setter Property="CanUserDeleteRows" Value="False"/>
+            <Setter Property="IsReadOnly" Value="True"/>
+            <Setter Property="GridLinesVisibility" Value="All"/>
+            <Setter Property="HeadersVisibility" Value="Column"/>
+            <Setter Property="RowHeight" Value="24"/>
+            <Setter Property="ColumnHeaderHeight" Value="26"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="BorderBrush" Value="{StaticResource AtsBorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="HorizontalGridLinesBrush" Value="#E2E8F0"/>
+            <Setter Property="VerticalGridLinesBrush" Value="#E2E8F0"/>
+        </Style>
+    </UserControl.Resources>
+
+    <DockPanel LastChildFill="True">
+        <Border DockPanel.Dock="Top"
+                Height="30"
+                Background="{StaticResource AtsToolbarBrush}"
+                BorderBrush="{StaticResource AtsBorderBrush}"
+                BorderThickness="0,0,0,1">
+            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                          VerticalScrollBarVisibility="Disabled">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Button Style="{StaticResource FlatToolButtonStyle}" Content="新建" IsEnabled="False"/>
+                    <Button Style="{StaticResource FlatToolButtonStyle}" Content="编辑" IsEnabled="False"/>
+                    <Button Style="{StaticResource FlatToolButtonStyle}" Content="打开" Command="{Binding OpenCommand}"/>
+                    <Button Style="{StaticResource FlatToolButtonStyle}" Content="导出" IsEnabled="False"/>
+                    <Button Style="{StaticResource FlatToolButtonStyle}" Content="导入" IsEnabled="False"/>
+                    <Button Style="{StaticResource FlatToolButtonStyle}" Content="保存" Command="{Binding SaveCommand}"/>
+                    <Button Style="{StaticResource FlatToolButtonStyle}" Content="另存为" IsEnabled="False"/>
+                    <Button Style="{StaticResource FlatToolButtonStyle}" Content="取消" IsEnabled="False"/>
+                    <Button Style="{StaticResource FlatToolButtonStyle}" Content="编辑公共变量" IsEnabled="False"/>
+                    <Button Style="{StaticResource FlatToolButtonStyle}" Content="修改流程名称" IsEnabled="False"/>
+                    <TextBlock Text="【流程："
+                               VerticalAlignment="Center"
+                               Margin="12,0,0,0"
+                               FontWeight="SemiBold"/>
+                    <TextBox Width="260"
+                             Height="24"
+                             BorderThickness="0"
+                             Background="Transparent"
+                             VerticalContentAlignment="Center"
+                             Text="{Binding FlowName, UpdateSourceTrigger=PropertyChanged}"/>
+                    <TextBlock Text="】"
+                               VerticalAlignment="Center"
+                               FontWeight="SemiBold"/>
+                    <TextBlock Text="{Binding Message}"
+                               VerticalAlignment="Center"
+                               Margin="18,0,0,0"
+                               Foreground="#7A3E00"/>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="252"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <DockPanel Grid.Column="0"
+                       LastChildFill="True"
+                       Background="#F5F6F7">
+                <Border DockPanel.Dock="Top"
+                        Height="26"
+                        Background="#E6EAEE"
+                        BorderBrush="{StaticResource AtsBorderBrush}"
+                        BorderThickness="0,0,1,1">
+                    <TextBlock Text="测试项目"
+                               HorizontalAlignment="Center"
+                               VerticalAlignment="Center"
+                               FontWeight="SemiBold"/>
+                </Border>
+
+                <Border DockPanel.Dock="Top"
+                        Height="30"
+                        Background="#F3F5F7"
+                        BorderBrush="{StaticResource AtsBorderBrush}"
+                        BorderThickness="0,0,1,1">
+                    <StackPanel Orientation="Horizontal">
+                        <Button Style="{StaticResource IconButtonStyle}" Content="+" IsEnabled="False"/>
+                        <Button Style="{StaticResource IconButtonStyle}" Content="E" IsEnabled="False"/>
+                        <Button Style="{StaticResource IconButtonStyle}" Content="-" IsEnabled="False"/>
+                        <Button Style="{StaticResource IconButtonStyle}" Content="^" IsEnabled="False"/>
+                        <Button Style="{StaticResource IconButtonStyle}" Content="v" IsEnabled="False"/>
+                        <Button Style="{StaticResource IconButtonStyle}" Content="ABC" IsEnabled="False"/>
+                        <Button Style="{StaticResource IconButtonStyle}" Content="[]" IsEnabled="False"/>
+                        <Button Style="{StaticResource IconButtonStyle}" Content=">" IsEnabled="False"/>
+                        <Button Style="{StaticResource IconButtonStyle}" Content="&lt;" IsEnabled="False"/>
+                        <Button Style="{StaticResource IconButtonStyle}" Content="R" IsEnabled="False"/>
+                    </StackPanel>
+                </Border>
+
+                <ListBox ItemsSource="{Binding Projects}"
+                         SelectedItem="{Binding SelectedProject}"
+                         BorderBrush="{StaticResource AtsBorderBrush}"
+                         BorderThickness="0,0,1,0"
+                         Background="White"
+                         ScrollViewer.HorizontalScrollBarVisibility="Auto"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto">
+                    <ListBox.ItemContainerStyle>
+                        <Style TargetType="ListBoxItem">
+                            <Setter Property="Height" Value="24"/>
+                            <Setter Property="Padding" Value="2,0"/>
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ListBoxItem">
+                                        <Border x:Name="ItemBorder"
+                                                Background="Transparent">
+                                            <ContentPresenter/>
+                                        </Border>
+                                        <ControlTemplate.Triggers>
+                                            <Trigger Property="IsSelected" Value="True">
+                                                <Setter TargetName="ItemBorder" Property="Background" Value="#106EBE"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                            </Trigger>
+                                            <Trigger Property="IsMouseOver" Value="True">
+                                                <Setter TargetName="ItemBorder" Property="Background" Value="#E8F3FC"/>
+                                            </Trigger>
+                                        </ControlTemplate.Triggers>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ListBox.ItemContainerStyle>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="20"/>
+                                    <ColumnDefinition Width="18"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <CheckBox Grid.Column="0"
+                                          VerticalAlignment="Center"
+                                          IsChecked="{Binding IsEnable}"
+                                          IsEnabled="False"/>
+                                <TextBlock Grid.Column="1"
+                                           Text="▲"
+                                           Foreground="#F2A000"
+                                           VerticalAlignment="Center"
+                                           HorizontalAlignment="Center"
+                                           FontSize="11"/>
+                                <TextBlock Grid.Column="2"
+                                           Text="{Binding ProjectName}"
+                                           VerticalAlignment="Center"
+                                           Margin="2,0,0,0"
+                                           TextTrimming="CharacterEllipsis"/>
+                            </Grid>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+
+            <GridSplitter Grid.Column="1"
+                          Width="5"
+                          HorizontalAlignment="Stretch"
+                          Background="#D1D8E0"/>
+
+            <TabControl Grid.Column="2"
+                        Style="{StaticResource CompactTabControlStyle}"
+                        ItemContainerStyle="{StaticResource CompactTabItemStyle}">
+                <TabItem Header="项目脚本">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="430"/>
+                        </Grid.ColumnDefinitions>
+
+                        <DockPanel Grid.Column="0" LastChildFill="True" Background="White">
+                            <Border DockPanel.Dock="Top"
+                                    Height="28"
+                                    Background="#F3F5F7"
+                                    BorderBrush="{StaticResource AtsBorderBrush}"
+                                    BorderThickness="0,0,0,1">
+                                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                    <TextBlock Text="字号"
+                                               VerticalAlignment="Center"
+                                               Margin="8,0,4,0"
+                                               Foreground="#6B7785"/>
+                                    <hc:NumericUpDown Width="58"
+                                                      Height="22"
+                                                      Value="14"/>
+                                    <Button Style="{StaticResource FlatToolButtonStyle}"
+                                            Content="格式化"
+                                            MinWidth="60"
+                                            IsEnabled="False"/>
+                                    <Button Style="{StaticResource FlatToolButtonStyle}"
+                                            Content="脚本检验"
+                                            MinWidth="74"
+                                            Command="{Binding CheckScriptsCommand}"/>
+                                </StackPanel>
+                            </Border>
+
+                            <Border BorderBrush="{StaticResource AtsBorderBrush}"
+                                    BorderThickness="0,0,1,0"
+                                    Background="White">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="46"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <Border Grid.Column="0"
+                                            Background="#FAFAFA"
+                                            BorderBrush="{StaticResource AtsLightBorderBrush}"
+                                            BorderThickness="0,0,1,0">
+                                        <TextBlock Text="1&#x0a;16&#x0a;17&#x0a;18&#x0a;19&#x0a;20&#x0a;21&#x0a;22&#x0a;23&#x0a;24&#x0a;25&#x0a;26&#x0a;27"
+                                                   Margin="0,6,6,0"
+                                                   HorizontalAlignment="Right"
+                                                   FontFamily="Consolas"
+                                                   FontSize="20"
+                                                   Foreground="#8A96A3"
+                                                   LineHeight="34"/>
+                                    </Border>
+
+                                    <TextBox Grid.Column="1"
+                                             Text="{Binding SelectedProject.Script, UpdateSourceTrigger=PropertyChanged}"
+                                             AcceptsReturn="True"
+                                             AcceptsTab="True"
+                                             VerticalScrollBarVisibility="Auto"
+                                             HorizontalScrollBarVisibility="Auto"
+                                             BorderThickness="0"
+                                             Padding="10,6,0,0"
+                                             FontFamily="Consolas"
+                                             FontSize="20"
+                                             Foreground="#111827"
+                                             Background="White"/>
+                                </Grid>
+                            </Border>
+                        </DockPanel>
+
+                        <GridSplitter Grid.Column="1"
+                                      Width="5"
+                                      HorizontalAlignment="Stretch"
+                                      Background="#D1D8E0"/>
+
+                        <DockPanel Grid.Column="2"
+                                   LastChildFill="True"
+                                   Background="#F7F8FA">
+                            <Border DockPanel.Dock="Top"
+                                    Height="170"
+                                    Background="#F7F8FA"
+                                    BorderBrush="{StaticResource AtsBorderBrush}"
+                                    BorderThickness="1,0,0,1">
+                                <TextBlock Text="方法说明"
+                                           Margin="10,14,0,0"
+                                           Foreground="#1F2A35"/>
+                            </Border>
+
+                            <TabControl DockPanel.Dock="Bottom"
+                                        Height="68"
+                                        TabStripPlacement="Bottom"
+                                        Style="{StaticResource CompactTabControlStyle}"
+                                        ItemContainerStyle="{StaticResource BottomTabItemStyle}">
+                                <TabItem Header="设备控制"/>
+                                <TabItem Header="输出项"/>
+                                <TabItem Header="临时变量"/>
+                                <TabItem Header="DBC信号"/>
+                                <TabItem Header="UDS信号"/>
+                                <TabItem Header="公共变量"/>
+                            </TabControl>
+
+                            <DockPanel LastChildFill="True">
+                                <Border DockPanel.Dock="Top"
+                                        Height="34"
+                                        Background="#F3F5F7"
+                                        BorderBrush="{StaticResource AtsBorderBrush}"
+                                        BorderThickness="1,0,0,1">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="72"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0"
+                                                Style="{StaticResource FlatToolButtonStyle}"
+                                                Content="导入设备"
+                                                IsEnabled="False"/>
+                                        <TextBlock Grid.Column="1"
+                                                   Text="已关联设备配置："
+                                                   VerticalAlignment="Center"
+                                                   Margin="6,0,2,0"/>
+                                        <TextBox Grid.Column="2"
+                                                 Height="23"
+                                                 Margin="0,5,8,5"
+                                                 Text="{Binding DevConfigName, UpdateSourceTrigger=PropertyChanged}"/>
+                                    </Grid>
+                                </Border>
+
+                                <TextBox DockPanel.Dock="Top"
+                                         Height="30"
+                                         Margin="0"
+                                         Padding="10,0"
+                                         VerticalContentAlignment="Center"
+                                         Text="请输入搜索内容"
+                                         Foreground="#9AA4AF"
+                                         BorderBrush="{StaticResource AtsBorderBrush}"
+                                         BorderThickness="1,0,0,1"/>
+
+                                <TreeView BorderBrush="{StaticResource AtsBorderBrush}"
+                                          BorderThickness="1,0,0,0"
+                                          Background="White"
+                                          FontSize="13">
+                                    <TreeViewItem Header="设备控制方法" IsExpanded="True">
+                                        <TreeViewItem Header="IO板卡【plc80CH】"/>
+                                        <TreeViewItem Header="IO板卡【plc】"/>
+                                        <TreeViewItem Header="模拟电芯【vbts net】"/>
+                                        <TreeViewItem Header="矩阵【switch1】"/>
+                                        <TreeViewItem Header="矩阵【switch2】"/>
+                                        <TreeViewItem Header="可编程电阻模块【resistor1】"/>
+                                        <TreeViewItem Header="直流源【dcsource】"/>
+                                        <TreeViewItem Header="万用表【multimeter1】"/>
+                                        <TreeViewItem Header="数采仪【dataacq】"/>
+                                        <TreeViewItem Header="直流源【dcsource hi1】"/>
+                                        <TreeViewItem Header="BMS【bms1】"/>
+                                    </TreeViewItem>
+                                    <TreeViewItem Header="公共方法" IsExpanded="True">
+                                        <TreeViewItem Header="通用方法"/>
+                                        <TreeViewItem Header="Decode"/>
+                                    </TreeViewItem>
+                                </TreeView>
+                            </DockPanel>
+                        </DockPanel>
+                    </Grid>
+                </TabItem>
+
+                <TabItem Header="输出项">
+                    <DockPanel LastChildFill="True">
+                        <Border DockPanel.Dock="Top"
+                                Height="28"
+                                Background="#F3F5F7"
+                                BorderBrush="{StaticResource AtsBorderBrush}"
+                                BorderThickness="0,0,0,1">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Style="{StaticResource FlatToolButtonStyle}" Content="新增" IsEnabled="False"/>
+                                <Button Style="{StaticResource FlatToolButtonStyle}" Content="删除" IsEnabled="False"/>
+                                <Button Style="{StaticResource FlatToolButtonStyle}" Content="上移" IsEnabled="False"/>
+                                <Button Style="{StaticResource FlatToolButtonStyle}" Content="下移" IsEnabled="False"/>
+                                <Button Style="{StaticResource FlatToolButtonStyle}" Content="复制" IsEnabled="False"/>
+                            </StackPanel>
+                        </Border>
+                        <DataGrid Style="{StaticResource GridStyle}"
+                                  ItemsSource="{Binding SelectedProject.Outputs}">
+                            <DataGrid.Columns>
+                                <DataGridCheckBoxColumn Header="启用" Binding="{Binding IsEnabled}" Width="52"/>
+                                <DataGridTextColumn Header="显示内容" Binding="{Binding TestName}" Width="140"/>
+                                <DataGridTextColumn Header="底层命名" Binding="{Binding VarName}" Width="140"/>
+                                <DataGridTextColumn Header="数据类型" Binding="{Binding DataType}" Width="90"/>
+                                <DataGridTextColumn Header="下限" Binding="{Binding MinLimit}" Width="80"/>
+                                <DataGridTextColumn Header="上限" Binding="{Binding MaxLimit}" Width="80"/>
+                                <DataGridTextColumn Header="判定符号" Binding="{Binding ComparisonOperator}" Width="90"/>
+                                <DataGridTextColumn Header="单位" Binding="{Binding Unit}" Width="70"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </TabItem>
+
+                <TabItem Header="临时变量">
+                    <DockPanel LastChildFill="True">
+                        <Border DockPanel.Dock="Top"
+                                Height="28"
+                                Background="#F3F5F7"
+                                BorderBrush="{StaticResource AtsBorderBrush}"
+                                BorderThickness="0,0,0,1">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Style="{StaticResource FlatToolButtonStyle}" Content="新增" IsEnabled="False"/>
+                                <Button Style="{StaticResource FlatToolButtonStyle}" Content="删除" IsEnabled="False"/>
+                                <Button Style="{StaticResource FlatToolButtonStyle}" Content="上移" IsEnabled="False"/>
+                                <Button Style="{StaticResource FlatToolButtonStyle}" Content="下移" IsEnabled="False"/>
+                                <Button Style="{StaticResource FlatToolButtonStyle}" Content="复制" IsEnabled="False"/>
+                            </StackPanel>
+                        </Border>
+                        <DataGrid Style="{StaticResource GridStyle}"
+                                  ItemsSource="{Binding SelectedProject.TempVariables}">
+                            <DataGrid.Columns>
+                                <DataGridTextColumn Header="变量名" Binding="{Binding TempName}" Width="160"/>
+                                <DataGridTextColumn Header="值" Binding="{Binding TempValue}" Width="100"/>
+                                <DataGridTextColumn Header="单位" Binding="{Binding TempUnit}" Width="80"/>
+                                <DataGridTextColumn Header="数据类型" Binding="{Binding TempDataType}" Width="90"/>
+                                <DataGridTextColumn Header="数组长度" Binding="{Binding TempLength}" Width="90"/>
+                                <DataGridTextColumn Header="变量说明" Binding="{Binding TempRemark}" Width="240"/>
+                            </DataGrid.Columns>
+                        </DataGrid>
+                    </DockPanel>
+                </TabItem>
+            </TabControl>
+        </Grid>
+    </DockPanel>
+</UserControl>

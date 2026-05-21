@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="Prism.Wpf" Version="8.1.97" />
+    <PackageReference Include="xunit" Version="2.9.2" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.8.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ATS5.Application\ATS5.Application.csproj" />
+    <ProjectReference Include="..\ATS5.Infrastructure.LegacyAdapters\ATS5.Infrastructure.LegacyAdapters.csproj" />
+    <ProjectReference Include="..\ATS5.Modules.Authority\ATS5.Modules.Authority.csproj" />
+    <ProjectReference Include="..\ATS5.Modules.DataQuery\ATS5.Modules.DataQuery.csproj" />
+    <ProjectReference Include="..\ATS5.Modules.Device\ATS5.Modules.Device.csproj" />
+    <ProjectReference Include="..\ATS5.Modules.Flow\ATS5.Modules.Flow.csproj" />
+    <ProjectReference Include="..\ATS5.Modules.ProductTest\ATS5.Modules.ProductTest.csproj" />
+    <ProjectReference Include="..\ATS5.Wpf.Core\ATS5.Wpf.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\..\01_code\ATS\bin\Debug\AppDll\sqlite\System.Data.SQLite.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

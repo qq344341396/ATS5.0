@@ -1,0 +1,40 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net461</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ATS5.Application\ATS5.Application.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="ATSCommon">
+      <HintPath>..\..\01_code\ATS\bin\Debug\ATSCommon.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="ATSCore">
+      <HintPath>..\..\01_code\ATS\bin\Debug\ATSCore.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="ATSModel">
+      <HintPath>..\..\01_code\ATS\bin\Debug\ATSModel.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="Dapper">
+      <HintPath>..\..\01_code\ATS\bin\Debug\AppDll\Dapper.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\..\01_code\ATS\bin\Debug\AppDll\log4net.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>..\..\01_code\ATS\bin\Debug\AppDll\Newtonsoft.Json.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\..\01_code\ATS\bin\Debug\AppDll\sqlite\System.Data.SQLite.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

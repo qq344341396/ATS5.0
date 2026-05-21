@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net461</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Prism.DryIoc" Version="8.1.97" />
+    <PackageReference Include="HandyControl" Version="3.5.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ATS5.Application\ATS5.Application.csproj" />
+    <ProjectReference Include="..\ATS5.Infrastructure.LegacyAdapters\ATS5.Infrastructure.LegacyAdapters.csproj" />
+    <ProjectReference Include="..\ATS5.Modules.Authority\ATS5.Modules.Authority.csproj" />
+    <ProjectReference Include="..\ATS5.Modules.DataQuery\ATS5.Modules.DataQuery.csproj" />
+    <ProjectReference Include="..\ATS5.Modules.Device\ATS5.Modules.Device.csproj" />
+    <ProjectReference Include="..\ATS5.Modules.Flow\ATS5.Modules.Flow.csproj" />
+    <ProjectReference Include="..\ATS5.Modules.ProductTest\ATS5.Modules.ProductTest.csproj" />
+    <ProjectReference Include="..\ATS5.Wpf.Core\ATS5.Wpf.Core.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="..\..\01_code\ATS\bin\Debug\ATS.exe.config">
+      <Link>ATS.exe.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\01_code\ATS\bin\Debug\log4net.config">
+      <Link>log4net.config</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\01_code\ATS\bin\Debug\ATSMes.dll">
+      <Link>ATSMes.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\01_code\ATS\bin\Debug\ATSAutoTest.dll">
+      <Link>ATSAutoTest.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\01_code\ATS\bin\Debug\AppDll\**\*.*">
+      <Link>AppDll\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="..\..\01_code\ATS\bin\Debug\SysCache\Devices\DeviceHelper.dll">
+      <Link>SysCache\Devices\DeviceHelper.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+</Project>
