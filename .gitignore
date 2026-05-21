@@ -1,0 +1,71 @@
+# Build output
+[Bb]in/
+[Oo]bj/
+out/
+artifacts/
+TestResults/
+coverage/
+*.trx
+*.coverage
+*.coveragexml
+
+# Visual Studio / Rider / VS Code
+.vs/
+.idea/
+.vscode/.ropeproject
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# NuGet
+packages/
+*.nupkg
+*.snupkg
+project.lock.json
+project.assets.json
+*.nuget.props
+*.nuget.targets
+
+# Logs and diagnostics
+*.log
+logs/
+*.tlog
+*.binlog
+*.dmp
+
+# Generated / temporary files
+*.tmp
+*.temp
+*.cache
+*.bak
+*.orig
+~$*
+*.swp
+*.swo
+
+# Windows and tooling noise
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Local configuration and secrets
+*.local
+*.local.*
+appsettings.Local.json
+appsettings.Development.local.json
+*.pfx
+*.snk
+*.key
+*.pem
+*.cer
+*.crt
+*.env
+*.env.*
+
